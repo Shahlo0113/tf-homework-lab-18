@@ -47,34 +47,39 @@ resource "aws_route_table_association" "a" {
   route_table_id = aws_route_table.rt.id
 }
 
-resource "aws_security_group" "allow_ssh" {
-  vpc_id = aws_vpc.main.id
+resource "aws_security_group" "all_sg" {
+  for_each = var.security_groups
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  name        = each.key
+  description = each.value.description
+  vpc_id      = aws_vpc.main.id
+
+   dynamic "egress" {
+    for_each = each.value.egress_rules != null ? each.value.egress_rules : []
+
+
+    content {
+      description = egress.value.description
+      from_port   = egress.value.from_port
+      to_port     = egress.value.to_port
+      protocol    = egress.value.protocol
+      cidr_blocks = egress.value.cidr_blocks
+    }
   }
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+ dynamic "ingress" {
+    for_each = each.value.ingress_rules != null ? each.value.ingress_rules : []
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "ec2homework"
+    content {
+      description = ingress.value.description
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
+    }
   }
 }
+
 
 resource "aws_instance" "main" {
   ami           = "ami-0df435f331839b2d6"
@@ -82,7 +87,7 @@ resource "aws_instance" "main" {
   key_name      = "key1"
 
   subnet_id              = aws_subnet.main.id
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids = [aws_security_group.all_sg["web_sg"].id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -96,4 +101,27 @@ resource "aws_instance" "main" {
   tags = {
     Name = "ec2homework"
   }
+}
+
+variable "security_groups" {
+  description = "A map of security groups with their rules"
+  type = map(object({
+    description = string
+    ingress_rules = optional(list(object({
+      description = optional(string)
+      priority    = optional(number)
+      from_port   = number
+      to_port     = number
+      protocol    = string
+      cidr_blocks = list(string)
+    })))
+    egress_rules = list(object({
+      description = optional(string)
+      priority    = optional(number)
+      from_port   = number
+      to_port     = number
+      protocol    = string
+      cidr_blocks = list(string)
+    }))
+  }))
 }
