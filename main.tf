@@ -54,7 +54,7 @@ resource "aws_security_group" "all_sg" {
   description = each.value.description
   vpc_id      = aws_vpc.main.id
 
-   dynamic "egress" {
+  dynamic "egress" {
     for_each = each.value.egress_rules != null ? each.value.egress_rules : []
 
 
@@ -67,7 +67,7 @@ resource "aws_security_group" "all_sg" {
     }
   }
 
- dynamic "ingress" {
+  dynamic "ingress" {
     for_each = each.value.ingress_rules != null ? each.value.ingress_rules : []
 
     content {
