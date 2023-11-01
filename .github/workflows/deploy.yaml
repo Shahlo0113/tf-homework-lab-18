@@ -23,7 +23,7 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
       - name: Run Terraform Init
         run: terraform init
-      - name: Run Terraform Plan - BamBam
+      - name: Run Terraform Plan 
         run: terraform plan
       - name: Run Terraform Apply
         run: terraform apply -auto-approve
