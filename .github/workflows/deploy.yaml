@@ -27,8 +27,8 @@ jobs:
         run: terraform plan
       - name: Run Terraform Apply
         run: terraform apply -auto-approve
-      - name: Time
-        run: sleep 1000
+      #- name: Time
+       # run: sleep 1000
 
-      - name: Run Terraform Destroy
-        run: terraform destroy -auto-approve
+      #- name: Run Terraform Destroy
+       # run: terraform destroy -auto-approve
