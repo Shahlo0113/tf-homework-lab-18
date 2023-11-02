@@ -25,8 +25,9 @@ jobs:
         run: terraform init
       - name: Run Terraform Plan 
         run: terraform plan
-      - name: Run Terraform Apply
-        run: terraform apply -auto-approve
+        if: evn.type = workflow_dispatch
+      #- name: Run Terraform Apply
+       # run: terraform apply -auto-approve
       #- name: Time
        # run: sleep 1000
 
