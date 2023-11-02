@@ -26,8 +26,8 @@ jobs:
       - name: Run Terraform Plan 
         run: terraform plan
         if: github.event_name == 'workflow_dispatch'
-      #- name: Run Terraform Apply
-       # run: terraform apply -auto-approve
+      - name: Run Terraform Apply
+        run: terraform apply -auto-approve
       #- name: Time
        # run: sleep 1000
 
