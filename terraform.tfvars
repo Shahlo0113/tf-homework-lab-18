@@ -11,13 +11,6 @@ security_groups = {
         cidr_blocks = ["0.0.0.0/0"]
       },
       {
-        priority    = 201
-        from_port   = 443
-        to_port     = 443
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-      },
-      {
         description = "my_ssh"
         priority    = 202
         from_port   = 22
@@ -30,17 +23,10 @@ security_groups = {
       {
         priority    = 502
         from_port   = 0
-        to_port     = 65535
-        protocol    = "tcp"
+        to_port     = 0
+        protocol    = "-1"
         cidr_blocks = ["0.0.0.0/0"]
       },
-      {
-        priority    = 503
-        from_port   = 53
-        to_port     = 53
-        protocol    = "udp"
-        cidr_blocks = ["0.0.0.0/0"]
-      }
     ]
   }
 }

@@ -43,47 +43,13 @@ resource "aws_route_table_association" "a" {
   route_table_id = aws_route_table.rt.id
 }
 
-resource "aws_security_group" "all_sg" {
-  for_each = var.security_groups
-
-  name        = each.key
-  description = each.value.description
-  vpc_id      = aws_vpc.main.id
-
-  dynamic "egress" {
-    for_each = each.value.egress_rules != null ? each.value.egress_rules : []
-
-
-    content {
-      description = egress.value.description
-      from_port   = egress.value.from_port
-      to_port     = egress.value.to_port
-      protocol    = egress.value.protocol
-      cidr_blocks = egress.value.cidr_blocks
-    }
-  }
-
-  dynamic "ingress" {
-    for_each = each.value.ingress_rules != null ? each.value.ingress_rules : []
-
-    content {
-      description = ingress.value.description
-      from_port   = ingress.value.from_port
-      to_port     = ingress.value.to_port
-      protocol    = ingress.value.protocol
-      cidr_blocks = ingress.value.cidr_blocks
-    }
-  }
-}
-
-
 resource "aws_instance" "main" {
   ami           = "ami-0df435f331839b2d6"
   instance_type = "t2.micro"
   key_name      = "key1"
 
   subnet_id              = aws_subnet.main.id
-  vpc_security_group_ids = [aws_security_group.all_sg["web_sg"].id]
+  vpc_security_group_ids = [module.security_groups.security_group.all_sg["web_sg"].id]
 
   user_data = <<-EOF
               #!/bin/bash
