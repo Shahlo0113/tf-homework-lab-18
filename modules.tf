@@ -8,8 +8,9 @@ module "security-groups" {
   source  = "app.terraform.io/summercloud/security-groups/aws"
   version = "1.0.0"
   # insert required variables here
-  security_groups = var.security_groups
   vpc_id          = aws_vpc.main.id
+  security_groups = var.security_groups
+  
 }
 
 #module "vpc" {
