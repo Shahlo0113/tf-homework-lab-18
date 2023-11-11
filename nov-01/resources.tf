@@ -5,7 +5,6 @@ resource "aws_vpc" "main" {
     Name = "ec2homework"
   }
 }
-
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 
