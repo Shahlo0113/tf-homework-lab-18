@@ -48,7 +48,7 @@ resource "aws_instance" "main" {
   key_name      = "key1"
 
   subnet_id              = aws_subnet.main.id
-  vpc_security_group_ids = [module.security_groups.security_group_id["web_sg"]]
+  vpc_security_group_ids = [module.security-groups.security_group_id["web_sg"]]
 
   user_data = <<-EOF
               #!/bin/bash
